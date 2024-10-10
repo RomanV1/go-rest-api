@@ -6,11 +6,15 @@ import (
 	"github.com/RomanV1/go-rest-api/pkg/postgres"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
+	"log"
 	"os"
 )
 
 func main() {
+	loadEnv()
+
 	logger := logrus.New()
 	logger.SetOutput(os.Stdout)
 
@@ -18,7 +22,7 @@ func main() {
 
 	api := router.Group("/api")
 
-	client, err := postgres.NewClient(context.Background(), "postgres", "postgres", "localhost", "5432", "postgres")
+	client, err := postgres.NewClient(context.Background(), os.Getenv("PG_USERNAME"), os.Getenv("PG_PASSWORD"), os.Getenv("PG_HOST"), os.Getenv("PG_PORT"), os.Getenv("PG_DATABASE"))
 	if err != nil {
 		logger.WithError(err).Error("Failed to create PostgreSQL client")
 		panic(err)
@@ -43,5 +47,12 @@ func main() {
 	if err != nil {
 		logger.WithError(err).Error("Failed to start the server")
 		panic(err)
+	}
+}
+
+func loadEnv() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
 	}
 }
