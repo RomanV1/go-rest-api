@@ -26,7 +26,7 @@ func CustomErrorMessages(err error) string {
 		case "email":
 			errorMsg = fmt.Sprintf("Field %s must be a valid email", field)
 		case "at least one field must be present":
-			errorMsg = fmt.Sprintf("At least one field is required")
+			errorMsg = "At least one field is required"
 		default:
 			errorMsg = fmt.Sprintf("Field %s is invalid", field)
 		}
